@@ -1,39 +1,48 @@
-// ぷよぷよのステージの幅と高さ
-const stageWidth = 6;
-const stageHeight = 12;
+// ゲームの準備
+const canvas = document.getElementById("gameCanvas");
+const context = canvas.getContext("2d");
 
-// ぷよぷよのぷよの色
-const colors = ["red", "blue", "green", "yellow"];
+const puyoSize = 32; // ぷよのサイズ
 
-// ぷよぷよのステージを表す二次元配列
-let stage = [];
+// ぷよのグラフィックス
+const puyoImage = new Image();
+puyoImage.src = "puyo.png";
 
-// 初期化関数
-function init() {
-  // ステージを空の状態に初期化
-  for (let y = 0; y < stageHeight; y++) {
-    stage[y] = [];
-    for (let x = 0; x < stageWidth; x++) {
-      stage[y][x] = null;
-    }
-  }
-}
+// ぷよの位置
+let puyoX = 0;
+let puyoY = 0;
 
-// ぷよを落とす関数
-function dropPuyo() {
-  // TODO: ぷよを落とす処理を実装する
-}
-
-// ぷよぷよのゲームループ
+// ゲームのメインループ
 function gameLoop() {
-  // TODO: ゲームループの処理を実装する
-}
+  // キャンバスをクリア
+  context.clearRect(0, 0, canvas.width, canvas.height);
 
-// ゲームを開始する関数
-function startGame() {
-  init();
-  gameLoop();
+  // ぷよの描画
+  context.drawImage(puyoImage, puyoX, puyoY, puyoSize, puyoSize);
+
+  // メインループの再実行
+  requestAnimationFrame(gameLoop);
 }
 
 // ゲームの開始
-startGame();
+function startGame() {
+  // ユーザーの入力の受け付け
+  document.addEventListener("keydown", handleKeyPress);
+
+  // ゲームのメインループ開始
+  gameLoop();
+}
+
+// ユーザーの入力の処理
+function handleKeyPress(event) {
+  if (event.key === "ArrowLeft") {
+    puyoX -= puyoSize;
+  } else if (event.key === "ArrowRight") {
+    puyoX += puyoSize;
+  } else if (event.key === "ArrowDown") {
+    puyoY += puyoSize;
+  }
+}
+
+// 画像の読み込み完了後にゲームを開始
+puyoImage.onload = startGame;
